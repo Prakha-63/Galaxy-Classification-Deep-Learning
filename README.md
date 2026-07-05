@@ -1,9 +1,9 @@
 # 🌌 Galaxy Morphology Classification using Deep Learning
 
-> A comparative deep learning approach for classifying galaxies as **Round Smooth** or **Barred Spiral** using a Custom CNN and MobileNetV2 Transfer Learning on the Galaxy Zoo dataset.
+> A comparative deep learning approach for automated galaxy morphology classification using a **Custom Convolutional Neural Network (CNN)** and **MobileNetV2 Transfer Learning** on the Galaxy Zoo dataset.
 
 ![Python](https://img.shields.io/badge/Python-3.x-blue?logo=python)
-![TensorFlow](https://img.shields.io/badge/TensorFlow-orange?logo=tensorflow)
+![TensorFlow](https://img.shields.io/badge/TensorFlow-Deep%20Learning-orange?logo=tensorflow)
 ![Keras](https://img.shields.io/badge/Keras-red?logo=keras)
 ![License](https://img.shields.io/badge/License-MIT-green)
 
@@ -11,158 +11,254 @@
 
 # 📖 Overview
 
-Galaxy morphology provides valuable insight into the formation and evolution of galaxies. Manual classification of large astronomical datasets is time-consuming, making automated classification an important application of deep learning.
+Modern astronomical surveys capture millions of galaxy images, making manual classification impractical. This project develops and compares two deep learning approaches to automatically classify galaxies based on their morphology.
 
-This project develops and compares two deep learning approaches for binary galaxy morphology classification using the **Galaxy Zoo** dataset:
+The project implements:
 
-- **Custom Convolutional Neural Network (CNN)** built from scratch
-- **MobileNetV2 Transfer Learning** using pretrained ImageNet weights
+- A **Custom CNN** developed from scratch.
+- **MobileNetV2 Transfer Learning** using pretrained ImageNet weights.
 
-The project demonstrates the complete machine learning workflow, including:
-
-- Data exploration
-- Image preprocessing
-- Model development
-- Training and evaluation
-- Error analysis
-- Model comparison
+Both models are trained, evaluated, and compared to understand the benefits of transfer learning for astronomical image classification.
 
 ---
 
-# 🎯 Objectives
+# 🎯 Problem Statement
 
-- Automatically classify galaxies into:
-  - **Round Smooth**
-  - **Barred Spiral**
-- Compare a custom CNN against MobileNetV2 transfer learning.
-- Evaluate model performance using multiple metrics.
-- Analyze misclassified galaxies to understand model limitations.
+Galaxy morphology provides important insights into galaxy formation and evolution. However, manually classifying thousands or millions of galaxies is time-consuming and prone to inconsistencies.
+
+The objective of this project is to build an automated deep learning system capable of classifying galaxies into:
+
+- **Round Smooth Galaxies**
+- **Barred Spiral Galaxies**
+
+and compare the performance of a custom-built CNN against a modern transfer learning approach.
 
 ---
 
-# 🛰 Dataset
+# 📂 Dataset
 
 **Dataset:** Galaxy Zoo
 
-The dataset contains RGB astronomical images belonging to two morphology classes.
+Galaxy Zoo is a citizen science project where volunteers classify galaxies based on their visual morphology.
+
+### Dataset Information
+
+- Dataset: Galaxy Zoo
+- Image Format: RGB Images
+- Image Size: 256 × 256 × 3
+- Storage Format: HDF5 (.h5)
+
+### Classes
 
 | Label | Galaxy Type |
-|--------|-------------|
+|-------|-------------|
 | 0 | Round Smooth Galaxy |
 | 1 | Barred Spiral Galaxy |
 
-The images are stored in HDF5 format and preprocessed before training.
+**Dataset Source**
+
+- Galaxy Zoo
+- https://www.galaxyzoo.org/
+
+> The dataset is not included in this repository due to its size. Download it from the official source and place it in the project directory before running the notebook.
 
 ---
 
-# 🧠 Models Implemented
+# 🏗 Project Architecture
 
-## 1️⃣ Custom CNN
+The project consists of two deep learning models.
 
-A CNN designed from scratch consisting of:
+## Model 1 — Custom CNN
 
-- Convolution Layers
-- Max Pooling
-- Global Average Pooling
-- Dropout
-- Fully Connected Layer
-- Sigmoid Output
+Architecture:
 
-Purpose:
-
-- Understand CNN fundamentals
-- Establish a performance baseline
-
----
-
-## 2️⃣ MobileNetV2 Transfer Learning
-
-Transfer learning using MobileNetV2 pretrained on ImageNet.
-
-Features:
-
-- Frozen pretrained feature extractor
-- GlobalAveragePooling
-- Dropout
-- Binary classifier head
-
-Purpose:
-
-- Improve generalization
-- Reduce overfitting
-- Compare against the baseline CNN
+```
+Input Image
+      │
+Conv2D (32)
+      │
+MaxPooling
+      │
+Conv2D (64)
+      │
+MaxPooling
+      │
+GlobalAveragePooling
+      │
+Dense (128)
+      │
+Dropout (0.5)
+      │
+Sigmoid Output
+```
 
 ---
 
-# 📊 Evaluation Metrics
+## Model 2 — MobileNetV2 Transfer Learning
 
-The models are evaluated using:
+Architecture:
 
-- Test Accuracy
-- Precision
-- Recall
-- F1 Score
-- Confusion Matrix
-- Classification Report
+```
+Input Image
+      │
+MobileNetV2
+(ImageNet Pretrained)
+      │
+GlobalAveragePooling
+      │
+Dropout
+      │
+Dense (Sigmoid)
+```
 
-The notebook also includes:
-
-- Training Accuracy Curve
-- Validation Accuracy Curve
-- Training Loss Curve
-- Validation Loss Curve
-
----
-
-# 🔬 Error Analysis
-
-Beyond reporting accuracy, this project investigates model behavior by visualizing:
-
-- Correctly classified galaxies
-- Misclassified galaxies
-- Prediction confidence
-- Possible reasons for incorrect predictions, including:
-  - Low image contrast
-  - Faint spiral arms
-  - Edge-on galaxies
-  - Ambiguous morphology
+*(Architecture diagrams can be found in the `images/` folder.)*
 
 ---
 
-# 📈 Model Comparison
-
-The notebook compares the performance of:
-
-| Model | Description |
-|--------|-------------|
-| Custom CNN | Baseline model built from scratch |
-| MobileNetV2 | Transfer Learning model |
-
-Comparison includes:
-
-- Accuracy
-- Precision
-- Recall
-- F1 Score
-- Training Time
-- Model Complexity
-
----
-
-# 🛠 Technologies Used
+# 🛠 Tech Stack
 
 - Python
 - TensorFlow
 - Keras
 - NumPy
 - Matplotlib
+- Seaborn
 - scikit-learn
 - h5py
 - Jupyter Notebook
 
 ---
 
-# 📂 Project Structure
+# ⚙ Solution Approach
+
+The project follows a complete deep learning pipeline.
+
+## 1. Data Loading
+
+- Load Galaxy Zoo dataset
+- Read HDF5 images and labels
+
+---
+
+## 2. Exploratory Data Analysis
+
+- Dataset inspection
+- Class distribution
+- Sample galaxy visualization
+
+---
+
+## 3. Data Preprocessing
+
+- Convert images to NumPy arrays
+- Normalize pixel values
+- Resize images (where required)
+- Train/Test split
+
+---
+
+## 4. Model Development
+
+### Baseline Model
+
+A custom CNN was designed from scratch to establish a baseline performance.
+
+### Improved Model
+
+MobileNetV2 transfer learning was implemented to improve feature extraction and classification performance.
+
+---
+
+## 5. Model Training
+
+Training includes:
+
+- Binary Cross Entropy Loss
+- Adam Optimizer
+- Validation Split
+- Early Stopping
+- Learning Rate Scheduling
+
+---
+
+## 6. Model Evaluation
+
+The models are evaluated using:
+
+- Accuracy
+- Precision
+- Recall
+- F1 Score
+- Confusion Matrix
+- Classification Report
+
+---
+
+## 7. Error Analysis
+
+The notebook includes:
+
+- Correct predictions
+- Misclassified galaxies
+- Prediction confidence
+- Discussion of challenging cases
+
+---
+
+# 📊 Results
+
+The project compares two different approaches:
+
+| Model | Description |
+|--------|-------------|
+| Custom CNN | Baseline model developed from scratch |
+| MobileNetV2 | Transfer learning model using pretrained ImageNet weights |
+
+Evaluation includes:
+
+- Test Accuracy
+- Precision
+- Recall
+- F1 Score
+- Confusion Matrix
+- Training Curves
+- Error Analysis
+
+---
+
+# 🖼 Visual Results
+
+## Sample Galaxies
+
+![Sample Galaxies](images/sample_galaxies.png)
+
+---
+
+## Training Curves
+
+![Training Curves](images/training_curves.png)
+
+---
+
+## Confusion Matrix
+
+![Confusion Matrix](images/confusion_matrix.png)
+
+---
+
+## Correct Predictions
+
+![Correct Predictions](images/correct_predictions.png)
+
+---
+
+## Misclassified Predictions
+
+![Misclassified Predictions](images/misclassified_predictions.png)
+
+---
+
+# 📁 Project Structure
 
 ```
 Galaxy-Classification-Deep-Learning/
@@ -170,6 +266,7 @@ Galaxy-Classification-Deep-Learning/
 │── README.md
 │── LICENSE
 │── requirements.txt
+│── .gitignore
 │── Galaxy Classification using CNN.ipynb
 │── galaxy_classifier.keras
 
@@ -213,36 +310,14 @@ Galaxy Classification using CNN.ipynb
 
 ---
 
-# 📸 Project Highlights
-
-✔ Custom CNN built from scratch
-
-✔ MobileNetV2 Transfer Learning
-
-✔ Binary Galaxy Morphology Classification
-
-✔ Data Visualization
-
-✔ Training Curves
-
-✔ Confusion Matrix
-
-✔ Classification Report
-
-✔ Error Analysis
-
-✔ Model Comparison
-
----
-
-# 💡 Future Improvements
+# 🔮 Future Improvements
 
 - Fine-tune MobileNetV2 layers
 - Experiment with EfficientNet and ResNet
 - Multi-class galaxy morphology classification
-- Grad-CAM visualization for explainability
-- Deploy as a Streamlit web application
-- Train on larger astronomical datasets
+- Grad-CAM explainability
+- Streamlit web application
+- FastAPI deployment
 
 ---
 
@@ -259,9 +334,9 @@ Galaxy Classification using CNN.ipynb
 
 **Prakhar Neve**
 
-B.Tech (Computer Science & Business Systems)
+B.Tech – Computer Science & Business Systems
 
-Interested in:
+**Areas of Interest**
 
 - Artificial Intelligence
 - Machine Learning
